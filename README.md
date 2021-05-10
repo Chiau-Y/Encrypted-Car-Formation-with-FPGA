@@ -5,7 +5,7 @@
 >    - RSA (C語言)
 >    - PYNQ控制 (Python)
 ### PWM (Verilog)
-![image](https://user-images.githubusercontent.com/83625018/117638411-619fed80-b1b5-11eb-9329-bf9c1d741b95.png)
+![image](https://user-images.githubusercontent.com/83625018/117638777-c8bda200-b1b5-11eb-92dd-e3ad552c6ed7.png)
 ### RSA (C語言)
 ![image](https://user-images.githubusercontent.com/83625018/117638581-90b65f00-b1b5-11eb-9cbc-f2a9ba4faa1d.png)
 ### PYNQ控制 (Python)
