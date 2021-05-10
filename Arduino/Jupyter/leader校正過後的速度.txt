@@ -1,0 +1,184 @@
+from pynq import Overlay
+from pynq import MMIO
+from time import sleep
+
+base = Overlay("/home/xilinx/jupyter_notebooks/PWM_chiau/car_leader.bit")
+base.ip_dict
+
+base.download()
+
+pwm = MMIO(0x43C00000, 0x10000)
+rsa = MMIO(0x43C10000, 0x10000)
+
+button = base.button
+Communication_o = base.Data_def_output_2
+Communication_i = base.Data_def_2
+pwm_rsa_i = base.PWM_DIR_RSA_12
+rsa_o = base.RSA_output_12
+
+print('start')
+
+# PWM Period
+pwm.write(0x04, 300)
+
+#PWM Duty Cycle
+pwm.write(0x08, 0)
+pwm.write(0x0C, 0)
+pwm.write(0x10, 0)
+pwm.write(0x14, 0)
+
+#Desired Duty Cylce
+desired_speed_b = 70      #the lowest speed
+# desired_speed_b = 255   #the highest speed
+desired_speed_f = desired_speed_b + 5
+
+
+while(1):
+    if (button.read(0x0)) == 1 :
+        pwm.write(0x08, desired_speed_f + 40)
+        pwm.write(0x0C, desired_speed_f + 40)
+        pwm.write(0x10, desired_speed_f)
+        pwm.write(0x14, desired_speed_f + 8)
+        pwm.write(0x00, 1)
+        sleep(1)
+        pwm.write(0x08, 0)
+        pwm.write(0x0C, 0)
+        pwm.write(0x10, 0)
+        pwm.write(0x14, 0)
+        sleep(0.5)
+        pwm.write(0x08, desired_speed_b + 45)
+        pwm.write(0x0C, desired_speed_b + 45)
+        pwm.write(0x10, desired_speed_b)
+        pwm.write(0x14, desired_speed_b + 13) 
+        pwm.write(0x00, 2)
+        sleep(1)
+        pwm.write(0x08, 0)
+        pwm.write(0x0C, 0)
+        pwm.write(0x10, 0)
+        pwm.write(0x14, 0)
+        sleep(0.5)
+        pwm.write(0x08, desired_speed_b + 45)
+        pwm.write(0x0C, desired_speed_f + 40)
+        pwm.write(0x10, desired_speed_f)
+        pwm.write(0x14, desired_speed_b + 13) 
+        pwm.write(0x00, 3)
+        sleep(1)
+        pwm.write(0x08, 0)
+        pwm.write(0x0C, 0)
+        pwm.write(0x10, 0)
+        pwm.write(0x14, 0)
+        sleep(0.5)
+        pwm.write(0x08, desired_speed_f + 40)
+        pwm.write(0x0C, desired_speed_b + 45)
+        pwm.write(0x10, desired_speed_b)
+        pwm.write(0x14, desired_speed_f + 8) 
+        pwm.write(0x00, 4)
+        sleep(1)
+        pwm.write(0x08, 0)
+        pwm.write(0x0C, 0)
+        pwm.write(0x10, 0)
+        pwm.write(0x14, 0)
+        sleep(0.5)
+        pwm.write(0x08, 0)
+        pwm.write(0x0C, 0)
+        pwm.write(0x10, 0)
+        pwm.write(0x14, 0)
+        sleep(0.5)
+        pwm.write(0x00, 1)                 
+        pwm.write(0x08, desired_speed_f + 40)
+        pwm.write(0x0C, 0)
+        pwm.write(0x10, 0)
+        pwm.write(0x14, desired_speed_f + 8) 
+        sleep(1)
+        pwm.write(0x08, 0)
+        pwm.write(0x0C, 0)
+        pwm.write(0x10, 0)
+        pwm.write(0x14, 0)
+        sleep(0.5)
+        pwm.write(0x00, 2)                 
+        pwm.write(0x08, desired_speed_b + 45)
+        pwm.write(0x0C, 0)
+        pwm.write(0x10, 0)
+        pwm.write(0x14, desired_speed_b + 13)   
+        sleep(1)
+        pwm.write(0x08, 0)
+        pwm.write(0x0C, 0)
+        pwm.write(0x10, 0)
+        pwm.write(0x14, 0)
+        sleep(0.5)
+        pwm.write(0x00, 1)                 
+        pwm.write(0x08, 0)
+        pwm.write(0x0C, desired_speed_f + 40)
+        pwm.write(0x10, desired_speed_f)
+        pwm.write(0x14, 0)    
+        sleep(1)
+        pwm.write(0x08, 0)
+        pwm.write(0x0C, 0)
+        pwm.write(0x10, 0)
+        pwm.write(0x14, 0)
+        sleep(0.5)
+        pwm.write(0x00, 2)                 
+        pwm.write(0x08, 0)
+        pwm.write(0x0C, desired_speed_b + 45)
+        pwm.write(0x10, desired_speed_b)
+        pwm.write(0x14, 0)  
+        sleep(1)
+        pwm.write(0x08, 0)
+        pwm.write(0x0C, 0)
+        pwm.write(0x10, 0)
+        pwm.write(0x14, 0)
+        sleep(0.5)
+        pwm.write(0x08, desired_speed_b + 45)
+        pwm.write(0x0C, desired_speed_b + 45)
+        pwm.write(0x10, desired_speed_f)
+        pwm.write(0x14, desired_speed_f + 8) 
+        pwm.write(0x00, 5) 
+        sleep(1)
+        pwm.write(0x08, 0)
+        pwm.write(0x0C, 0)
+        pwm.write(0x10, 0)
+        pwm.write(0x14, 0)
+        sleep(0.5)
+        pwm.write(0x08, desired_speed_f + 40)
+        pwm.write(0x0C, desired_speed_f + 40)
+        pwm.write(0x10, desired_speed_b)
+        pwm.write(0x14, desired_speed_b + 13) 
+        pwm.write(0x00, 6) 
+        sleep(1)
+        pwm.write(0x08, 0)
+        pwm.write(0x0C, 0)
+        pwm.write(0x10, 0)
+        pwm.write(0x14, 0)
+        pwm.write(0x00, 0)  
+
+print('start')
+
+# PWM Period
+pwm.write(0x04, 300)
+
+while(1):
+    if (button.read(0x0)) == 1 :
+        pwm.write(0x08, 115)
+        pwm.write(0x0C, 115)
+        pwm.write(0x10, 75)
+        pwm.write(0x14, 83) 
+        pwm.write(0x00, 1) 
+    elif (button.read(0x0)) == 2 :
+        pwm.write(0x08, 0)
+        pwm.write(0x0C, 0)
+        pwm.write(0x10, 0)
+        pwm.write(0x14, 0) 
+        pwm.write(0x00, 0) 
+    elif (button.read(0x0)) == 4 :
+        pwm.write(0x08, 115)
+        pwm.write(0x0C, 115)
+        pwm.write(0x10, 70)
+        pwm.write(0x14, 83) 
+        pwm.write(0x00, 2)         
+    elif (button.read(0x0)) == 8 :
+        pwm.write(0x08, 0)
+        pwm.write(0x0C, 0)
+        pwm.write(0x10, 0)
+        pwm.write(0x14, 0) 
+        pwm.write(0x00, 1) 
+

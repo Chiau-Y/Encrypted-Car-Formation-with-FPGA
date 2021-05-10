@@ -1,0 +1,77 @@
+from pynq import Overlay
+from pynq import MMIO
+from time import sleep
+
+base = Overlay("/home/xilinx/jupyter_notebooks/car formation/car_2.bit")
+base.ip_dict
+
+base.download()
+
+pwm = MMIO(0x43C00000, 0x10000)
+
+button = base.button
+Communication_o = base.Data_def_output_2
+Communication_i = base.Data_def_2
+pwm_rsa_i = base.PWM_DIR_RSA_12
+rsa_o = base.RSA_output_12
+RSA = base.Encryption_Decryption
+inverse = base.Inverse_e
+
+print('start')
+
+e = 13   #49,21
+p = 43   #101,23
+q = 59   #131,53
+n = int(p) * int(q) 
+r = int(p-1) * int(q-1)
+
+Communication_o.write(0x0,0)
+
+#-----------------Find the inverse of e, d-----------------  
+inverse.write(0x10,e)  #e
+inverse.write(0x1c,r)  #r
+
+inverse.write(0x00,1)  #start bit
+while (1):
+    if (inverse.read(0x00) == 6):
+        d = inverse.read(0x28) + r  #d = x + r
+        print("d = ",d)
+        print(" ")
+        break
+#---------------------------Start--------------------------  
+while(1):
+    if (Communication_i.read(0x0)) == 2 :
+        sleep(0.05)
+        msg_receive = pwm_rsa_i.read(0x0)
+        sleep(0.01)
+        print("msg_receive : ",msg_receive)       
+#------------------------Encryption------------------------            
+        RSA.write(0x10,msg_receive)  #message
+        RSA.write(0x1c,e)  #key,e
+        RSA.write(0x28,n)  #n = p*q
+        
+        RSA.write(0x00,1)  #start bit
+        while (1):
+            if (RSA.read(0x00) == 6):
+                c = RSA.read(0x34)
+                Communication_o.write(0x0,3)
+                rsa_o.write(0x0,c)               
+                Communication_o.write(0x0,0)
+                break
+#------------------------Decryption------------------------         
+    elif (Communication_i.read(0x0)) == 3 :
+        sleep(0.05)
+        c_receive = pwm_rsa_i.read(0x0)
+        sleep(0.01)
+        print("c_receive : ",c_receive)
+        RSA.write(0x10,c_receive)  
+        RSA.write(0x1c,d)  
+        RSA.write(0x28,n)  #n = p*q
+
+        RSA.write(0x00,1)  #start bit       
+        while (1):
+            if (RSA.read(0x00) == 6):
+                m = RSA.read(0x34)
+                print("The message is : ",m)
+                break
+            

@@ -1,0 +1,99 @@
+from pynq import Overlay
+from pynq import MMIO
+from time import sleep
+
+base = Overlay("/home/xilinx/jupyter_notebooks/PWM_chiau/car_leader.bit")
+base.ip_dict
+
+base.download()
+
+pwm = MMIO(0x43C00000, 0x10000)
+rsa = MMIO(0x43C10000, 0x10000)
+
+button = base.button
+Communication_o = base.Data_def_output_2
+Communication_i = base.Data_def_2
+pwm_rsa_i = base.PWM_DIR_RSA_12
+rsa_o = base.RSA_output_12
+
+print('start')
+
+# PWM Period
+pwm.write(0x04, 255)
+
+#PWM Duty Cycle
+pwm.write(0x08, 0)
+pwm.write(0x0C, 0)
+pwm.write(0x10, 0)
+pwm.write(0x14, 0)
+
+Communication_o.write(0x0,0) 
+direction_1 = 100
+blank = 0
+while(1):    
+    direction = pwm_rsa_i.read(0x0) 
+    if direction_1 == direction :
+        direction = direction - 4080
+    else :                
+        blank = blank + 1
+        if blank == 2 :            
+            direction_1 = pwm_rsa_i.read(0x0) 
+            direction = direction - 4080
+            blank = 0
+
+            if (direction > 10) : # Stop
+                pwm.write(0x08, 0)
+                pwm.write(0x0C, 0)
+                pwm.write(0x10, 0)
+                pwm.write(0x14, 0)
+                pwm.write(0x00, 0)
+                print("Error")
+            else :
+                pwm.write(0x08, 125)
+                pwm.write(0x0C, 100)
+                pwm.write(0x10, 125)
+                pwm.write(0x14, 100) 
+                print("Direction = ",direction)
+                if (direction == 1) :               # Forward
+                    pwm.write(0x00, 1)         
+                elif (direction == 2) :             # Backward
+                    pwm.write(0x00, 2) 
+                elif (direction == 3) :             # Left 
+                    pwm.write(0x00, 3) 
+                elif (direction == 4) :             # Right
+                    pwm.write(0x00, 4) 
+                elif (direction == 5) :             # Forward-right
+                    pwm.write(0x00, 1)                 
+                    pwm.write(0x08, 125)
+                    pwm.write(0x0C, 0)
+                    pwm.write(0x10, 0)
+                    pwm.write(0x14, 100) 
+                elif (direction == 6) :             # Forward-left 
+                    pwm.write(0x00, 1)                 
+                    pwm.write(0x08, 0)
+                    pwm.write(0x0C, 100)
+                    pwm.write(0x10, 125)
+                    pwm.write(0x14, 0) 
+                elif (direction == 7) :             # Backward-right
+                    pwm.write(0x00, 2)                 
+                    pwm.write(0x08, 0)
+                    pwm.write(0x0C, 100)
+                    pwm.write(0x10, 125)
+                    pwm.write(0x14, 0) 
+                elif (direction == 8) :             # Backward-left
+                    pwm.write(0x00, 2)                 
+                    pwm.write(0x08, 125)
+                    pwm.write(0x0C, 0)
+                    pwm.write(0x10, 0)
+                    pwm.write(0x14, 100) 
+                elif (direction == 9) :             # Clockwise
+                    pwm.write(0x00, 5) 
+                elif (direction == 10) :            # Counterclockwise
+                    pwm.write(0x00, 6)  
+                elif (direction == 0) :   
+                    pwm.write(0x08, 0)
+                    pwm.write(0x0C, 0)
+                    pwm.write(0x10, 0)
+                    pwm.write(0x14, 0)
+                    pwm.write(0x00, 0)
+                    print("STOP")

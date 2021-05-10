@@ -1,0 +1,110 @@
+from pynq import Overlay
+from pynq import MMIO
+from time import sleep
+
+base = Overlay("/home/xilinx/jupyter_notebooks/car formation/car_6.bit")
+base.ip_dict
+
+base.download()
+
+pwm = MMIO(0x43C00000, 0x10000)
+
+button = base.button
+define_encrypt_xy= base.Data_def_output_2   #raspberry pi pin 12, 16
+rsp = base.Data_def_2                 #raspberry pi pin 8, 10
+rsa_i = base.PWM_DIR_RSA_12
+mpu_i = base.RSA_output_12
+RSA = base.Encryption_Decryption
+inverse = base.Inverse_e
+
+print('start')
+
+e = 35   #49,21
+p = 37   #101,23
+q = 53   #131,53
+n = int(p) * int(q) 
+r = int(p-1) * int(q-1)
+times = 0
+Coordinate = [0, 0, 0, 0, 0, 0]
+Coordinate_o = [0, 0, 0, 0, 0, 0]
+rsp.write(0x0,0)
+
+#-----------------Find the inverse of e, d-----------------  
+inverse.write(0x10,e)  #e
+inverse.write(0x1c,r)  #r
+
+inverse.write(0x00,1)  #start bit
+while (1):
+    if (inverse.read(0x00) == 6):
+        d = inverse.read(0x28) + r  #d = x + r
+        print("d = ",d)
+        print(" ")
+        break
+
+while(1):
+    if (define_encrypt_xy.read(0x0) == 1):
+        while(1):
+            if (times == 4):
+                rsp.write(0x0,3)
+                sleep(0.01)
+                rsp.write(0x0,0)
+                times = 0
+#-----------------------Decryption_x-----------------------  
+                for i in range (4):
+                    RSA.write(0x10,Coordinate[i])  #message        
+                    RSA.write(0x1c,d)  #key,e
+                    RSA.write(0x28,n)  #n = p*q
+
+                    RSA.write(0x00,1)  #start bit
+                    while (1):
+                        if (RSA.read(0x00) == 6):
+                            Coordinate_o[i] = RSA.read(0x34)
+                            print(Coordinate_o[i])
+                            break
+                print("-------------The End-------------") 
+#-----------------------Recieve data-----------------------                    
+            elif ((define_encrypt_xy.read(0x0) == 2) and (times == 0)) :
+                while(1):                    
+                    if (define_encrypt_xy.read(0x0) == 0) :
+                        Coordinate[0] = rsa_i.read(0x0)
+#                         print("CarA_x : ", Coordinate[0] )
+                        times += 1
+                        break;
+            elif ((define_encrypt_xy.read(0x0) == 2) and (times == 1)) :
+                while(1):                    
+                    if (define_encrypt_xy.read(0x0) == 0) :
+                        Coordinate[1] = rsa_i.read(0x0)
+#                         print("CarA_y : ", Coordinate[1])
+                        times += 1
+                        break;
+            elif ((define_encrypt_xy.read(0x0) == 2) and (times == 2)) :
+                while(1):                    
+                    if (define_encrypt_xy.read(0x0) == 0) :
+                        Coordinate[2] = rsa_i.read(0x0)
+#                         print("CarB_x : ", Coordinate[2])
+                        times += 1
+                        break;
+            elif ((define_encrypt_xy.read(0x0) == 2) and (times == 3)) :
+                while(1):                    
+                    if (define_encrypt_xy.read(0x0) == 0) :
+                        Coordinate[3] = rsa_i.read(0x0)
+#                         print("CarB_y : ", Coordinate[3])
+                        times += 1
+                        break;
+#             elif ((define_encrypt_xy.read(0x0) == 2) and (times == 4)) :
+#                 while(1):
+#                     Coordinate[4] = rsa_i.read(0x0)
+#                     if (define_encrypt_xy.read(0x0) == 0) :
+# #                         print("CarC_x : ", Coordinate[4])
+#                         times += 1
+#                         break;
+#             elif ((define_encrypt_xy.read(0x0) == 2) and (times == 5)) :
+#                 while(1):
+#                     Coordinate[5] = rsa_i.read(0x0)
+#                     if (define_encrypt_xy.read(0x0) == 0) :
+# #                         print("CarC_y : ", Coordinate[5])
+#                         times += 1
+#                         break;
+            if (button.read(0x0)) == 1 :
+                print("break")
+                break;
