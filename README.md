@@ -10,6 +10,8 @@
 ![image](https://user-images.githubusercontent.com/83625018/117638581-90b65f00-b1b5-11eb-9cbc-f2a9ba4faa1d.png)
 ### PYNQ控制 (Python)
 ![image](https://user-images.githubusercontent.com/83625018/117638526-7ed4bc00-b1b5-11eb-8502-81d827bbaf45.png)
+### 系統IP
+![image](https://user-images.githubusercontent.com/83625018/117638693-b17eb480-b1b5-11eb-903d-e17775323f51.png)
 
 ## 3. 利用Arduino和Raspberry Pi做通訊
 ### 通訊架構圖
