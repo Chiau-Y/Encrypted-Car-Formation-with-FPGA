@@ -1,10 +1,10 @@
 # Encrypted-Car-Formation-with-FPGA
 1. 使用RSA進行加解密
-2. 使用FPGA將加解密運算加速
+2. 使用FPGA將加解密運算加速，如下
     - PWM (Verilog)
     - RSA (C語言)
 3. 利用Arduino和Raspberry Pi做通訊
-
+--------------------------------------------
 ## PYNQ-Z2 GPIO control
 ### GPIO Control 
 - 所有腳位在未給訊號時，皆輸出HIGH
