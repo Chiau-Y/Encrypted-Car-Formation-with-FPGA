@@ -7,7 +7,7 @@
 ### PWM (Verilog)
 ![image](https://user-images.githubusercontent.com/83625018/117638411-619fed80-b1b5-11eb-9329-bf9c1d741b95.png)
 ### RSA (C語言)
-![image](https://user-images.githubusercontent.com/83625018/117638489-754b5400-b1b5-11eb-9c73-3acae0fd26c5.png)
+![image](https://user-images.githubusercontent.com/83625018/117638581-90b65f00-b1b5-11eb-9cbc-f2a9ba4faa1d.png)
 ### PYNQ控制 (Python)
 ![image](https://user-images.githubusercontent.com/83625018/117638526-7ed4bc00-b1b5-11eb-8502-81d827bbaf45.png)
 
