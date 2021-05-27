@@ -7,7 +7,7 @@
     - PYNQ-Z2 Reference Manual v1.0
         https://d2m32eurp10079.cloudfront.net/Download/pynqz2_user_manual_v1_0.pdf
     - TUL_PYNQ_Schematic_R12
-    chrome-extension://oemmndcbldboiebfnladdacbdfmadadm/https://dpoauwgwqsy2x.cloudfront.net/Download/TUL_PYNQ_Schematic_R12.pdf
+    https://dpoauwgwqsy2x.cloudfront.net/Download/TUL_PYNQ_Schematic_R12.pdf
 - 前置作業 : 建一個GPIO的IP    
     - 在Block Design中建一個GPIO的IP
     ![](https://i.imgur.com/CXODDpj.png)
