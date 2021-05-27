@@ -3,7 +3,7 @@
 - 所有腳位在未給訊號時，皆輸出HIGH
 - GPIO設置所需的資料連結與文件
     - Creating a simple Overlay for PYNQ-Z1 board from Vivado HLx
-    https://yangtavares.com/2017/07/31/creating-a-simple-overlay-for-pynq-z1-board-from-vivado-hlx/
+    https://yangtavaresblog.wordpress.com/2017/07/31/creating-a-simple-overlay-for-pynq-z1-board-from-vivado-hlx/
     - PYNQ-Z2 Reference Manual v1.0
         https://d2m32eurp10079.cloudfront.net/Download/pynqz2_user_manual_v1_0.pdf
     - TUL_PYNQ_Schematic_R12
